@@ -19,12 +19,15 @@ With >=,>,<,<= you need use Numeric values.
 ![Condition2](doc-condition-2.png)
 
 If "Halt" is set on "if condition is true" job halt when condition is true.
+
 If "Halt" is set on "if condition is false" job halt when condition is false.
+
 Case for "Halt Status" :
 - "Success" : Job halt with successed.
 - "Failed" : Job halt with failed.
 - "Custom Status" : Use "Custom Status" parameter as status.
-"Custom Status" : Use this status if halt and "Halt Status" is set on "Custom Status". Less
+
+"Custom Status" : Use this status if halt and "Halt Status" is set on "Custom Status".
 
 If "Halt Status" is set on "Custom Status" and this parameter is empty halt going on failed status.
 
