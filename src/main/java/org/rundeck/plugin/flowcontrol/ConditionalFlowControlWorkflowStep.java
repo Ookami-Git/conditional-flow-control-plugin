@@ -49,11 +49,13 @@ public class ConditionalFlowControlWorkflowStep implements StepPlugin {
     String condition;
     @PluginProperty(title = "Second Value", description = "To this", required = true)
     String value2;
-    @PluginProperty(title = "Halt", description = "If checked, halt when condition is satisfied. If unchecked, halt when condition is unsatisfied.", defaultValue = "false")
-    boolean halt;
-    @PluginProperty(title = "Fail", description = "Halt with fail result?", defaultValue = "false")
-    boolean fail;
-    @PluginProperty(title = "Status", description = "Use a custom exit status message.")
+    @PluginProperty(title = "Halt", defaultValue = "if condition is true", required = true)
+    @SelectValues(freeSelect = false, values = {"if condition is true","if condition is false"})
+    String haltcondition;
+    @PluginProperty(title = "Halt Status", defaultValue = "Success", required = true)
+    @SelectValues(freeSelect = false, values = {"Success","Failed","Custom status"})
+    String haltstatus;
+    @PluginProperty(title = "Custom Status", description = "Use a custom exit status message.")
     String status;
     @PluginProperty(title = "Halt Message", description = "Print this message if halt.")
     String haltmessage;
@@ -62,7 +64,24 @@ public class ConditionalFlowControlWorkflowStep implements StepPlugin {
     public void executeStep(final PluginStepContext context, final Map<String, Object> configuration)
             throws StepException
     {
+        boolean halt=true;
+        boolean fail=false;
+        boolean customfail=false;
         boolean validation=false;
+
+        if (haltcondition.equals("if condition is true")) {
+            halt=true;
+        } else {
+            halt=false;
+        }
+
+        if (haltstatus.equals("Failed")) {
+            fail=true;
+        } else if (haltstatus.equals("Custom status")) {
+            fail=true;
+            customfail=true;
+        }
+
         if (condition.equals(">=") || condition.equals(">") || condition.equals("<") || condition.equals("<=")) {
             float v1=Float.parseFloat(value1.replace(",","."));
             float v2=Float.parseFloat(value2.replace(",","."));
@@ -103,7 +122,7 @@ public class ConditionalFlowControlWorkflowStep implements StepPlugin {
             if (null != haltmessage) {
                 context.getLogger().log(2,haltmessage);
             }
-            if (null != status) {
+            if ((null != status) && customfail) {
                 context.getFlowControl().Halt(status);
             } else {
                 context.getFlowControl().Halt(!fail);
