@@ -2,6 +2,16 @@
 
 A Rundeck plugin to control execution flow with conditions.
 
+### Install
+
+Download last release or download source and build :
+
+```
+./gradlew clean build
+```
+
+Put jar file in your ```$RDECK_BASE/libext/``` directory
+
 ### Usage
 
 Select the Conditional Flow control plugin when creating a job.
